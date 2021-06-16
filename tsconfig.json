@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "outDir": "out",
+        "module": "CommonJS",
+        "sourceMap": true,
+        "allowJs": true,
+        "types": [ "node" ],
+        "typeRoots": [ "../node_modules/@types" ]
+    }
+}
