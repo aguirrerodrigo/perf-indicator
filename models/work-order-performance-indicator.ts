@@ -1,4 +1,4 @@
-export interface PerformanceIndicator {
+export default interface WorkOrderPerformanceIndicator {
     id?: number;
     code?: string;
     description?: string;

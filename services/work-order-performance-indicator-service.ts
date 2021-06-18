@@ -1,10 +1,10 @@
-import * as Express from "express";
-import { PerformanceIndicator } from "../models/performance-indicator";
-import { Service } from "./service";
+import { Application } from "express";
+import WorkOrderPerformanceIndicator from "../models/work-order-performance-indicator";
+import Service from "./service";
 
-export class WorkOrderPerformanceIndicatorService implements Service
+export default class WorkOrderPerformanceIndicatorService implements Service
 {
-    private readonly _data: { [id: number]: PerformanceIndicator } = {
+    private readonly _data: { [id: number]: WorkOrderPerformanceIndicator } = {
         1001: { id: 1001, code: 'Perf-1', description: 'Perf-1 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: null, workOrder: 1111 },
         1002: { id: 1002, code: 'Perf-2', description: 'Perf-2 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: null, workOrder: 1111 },
         1003: { id: 1003, code: 'Perf-3', description: 'Perf-3 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: 102, workOrder: 1111 },
@@ -13,7 +13,7 @@ export class WorkOrderPerformanceIndicatorService implements Service
         1006: { id: 1006, code: 'Perf-6', description: 'Perf-6 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: 105, workOrder: 1111 }
     }
 
-    constructor(public app: Express.Application) {
+    constructor(public app: Application) {
     }
 
     start(): void {
@@ -44,8 +44,8 @@ export class WorkOrderPerformanceIndicatorService implements Service
             });
     }
 
-    private getArray(): PerformanceIndicator[] {
-        const result: PerformanceIndicator[] = [];
+    private getArray(): WorkOrderPerformanceIndicator[] {
+        const result: WorkOrderPerformanceIndicator[] = [];
         Object.keys(this._data).map((index) => {
             result.push(this._data[index]);
         });
