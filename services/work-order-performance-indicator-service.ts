@@ -19,7 +19,9 @@ export default class WorkOrderPerformanceIndicatorService implements Service
     start(): void {
         this.app.route('/RestServices/api/WorkManagement/WorkOrders/:WorkOrderId/PerformanceIndicators')
             .get((req, res) => {
-                res.send({ data: this.getArray() });
+                const arr = this.getArray();
+                const result = arr.filter(pi => pi.workOrder == Number(req.params.WorkOrderId));
+                res.send({ data: result });
             });
 
         this.app.route('/RestServices/api/WorkManagement/WorkOrders/:WorkOrderId/PerformanceIndicators/:PerformanceIndicatorId?')

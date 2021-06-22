@@ -11,6 +11,7 @@ export default class AssetPerformanceIndicatorService implements Service
         { id: 1003,  asset: 1002, code: 'Perf-4', createWorkOrder: 'Never', highestValue: 9, lowestValue: 0, unitOfMeasure: 'UOM-1' },
         { id: 1004,  activity: 1010, asset: 1001, code: 'Perf-1', createWorkOrder: 'Always', highestValue: 100, lowestValue: 0 },
         { id: 1005,  activity: 1011, asset: 1001, code: 'Perf-2', createWorkOrder: 'Always', highestValue: 1000, lowestValue: 500, standardWorkOrder: 1000, unitOfMeasure: 'UOM-1' },
+        { id: 1006,  activity: 1010, asset: 1001, code: 'Perf-V1', createWorkOrder: 'Always', highestValue: 100, lowestValue: 0 },
     ]
 
     constructor(public app: Application) {
