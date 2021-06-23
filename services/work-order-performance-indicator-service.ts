@@ -61,11 +61,11 @@ export default class WorkOrderPerformanceIndicatorService implements Service
                 else {
                     const update = req.body
                     if(update) {
-                        const value = Number(update.value || update.Value);
+                        const value = update.value || update.Value;
                         const readDate = update.readDate || update.ReadDate;
         
-                        if(value) pi.value = value;
-                        if(readDate) pi.readDate = new Date(readDate);
+                        if(value != null && !isNaN(value)) pi.value = Number(value);
+                        if(readDate != null) pi.readDate = new Date(readDate);
                     }
                     res.send({data: pi});
                 }
