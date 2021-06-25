@@ -1,40 +1,33 @@
 import { Application } from "express";
-import WorkOrderPerformanceIndicator from "../models/work-order-performance-indicator";
+import WorkOrderPerformanceIndicator from "../models/historical-performance-indicator";
 import Service from "./service";
 
-export default class WorkOrderPerformanceIndicatorService implements Service
+export default class HistoricalPerformanceIndicatorService implements Service
 {
     private readonly _data: { [id: number]: WorkOrderPerformanceIndicator } = {
-        // 1001: { id: 1001, code: 'Perf-1', description: 'Perf-1 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: null, workOrder: 1111 },
-        // 1002: { id: 1002, code: 'Perf-2', description: 'Perf-2 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: null, workOrder: 1111 },
-        // 1003: { id: 1003, code: 'Perf-3', description: 'Perf-3 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: 102, workOrder: 1111 },
-        // 1004: { id: 1004, code: 'Perf-4', description: 'Perf-4 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: 103, workOrder: 1111 },
-        // 1005: { id: 1005, code: 'Perf-5', description: 'Perf-5 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: 104, workOrder: 1111 },
-        // 1006: { id: 1006, code: 'Perf-6', description: 'Perf-6 DESC', readDate: new Date(Date.UTC(2021, 1, 1)), value: 105, workOrder: 1111 }
+        // 1000: { assetPerformanceIndicator: {id: 1000}, id: 1000, readingDate: new Date(Date.UTC(2021, 1, 1)), value: 50, workOrder: 1000 }
     }
 
     constructor(public app: Application) {
     }
 
     start(): void {
-        this.app.route('/RestServices/api/WorkManagement/WorkOrders/:WorkOrderId/PerformanceIndicators')
+        this.app.route('/RestServices/api/WorkManagement/WorkOrders/:WorkOrderId/HistoricalPerformanceIndicators')
             .get((req, res) => {
                 const arr = this.getArray();
                 const result = arr.filter(pi => pi.workOrder == Number(req.params.WorkOrderId));
                 res.send({ data: result });
-            });
-
-        this.app.route('/RestServices/api/WorkManagement/WorkOrders/:WorkOrderId/PerformanceIndicators/:PerformanceIndicatorId?')
-            .post((req, res) => {
+            })
+            .post ((req, res) => {
                 const keys = Object.keys(this._data)
                 const id = Number(keys.length > 0 ? keys[keys.length - 1] : 1000) + 1;
 
                 const data = req.body;
-                const code = data.code || data.Code;
+                const assetPerformanceIndicator = data.assetPerformanceIndicator || data.AssetPerformanceIndicator;
                 const workOrder = data.workOrder || data.WorkOrder;
 
-                if(!code) {
-                    res.status(400).send('Code is required.');
+                if(!assetPerformanceIndicator && !(assetPerformanceIndicator.id || assetPerformanceIndicator.Id)) {
+                    res.status(400).send('AssetPerformanceIndicator is required.');
                     return;
                 } else if (!workOrder) {
                     res.status(400).send('WorkOrder is required.');
@@ -42,17 +35,19 @@ export default class WorkOrderPerformanceIndicatorService implements Service
 
                 var pi: WorkOrderPerformanceIndicator = {
                     id: id,
-                    code: code,
+                    assetPerformanceIndicator: assetPerformanceIndicator,
                     workOrder: workOrder,
                     value: data.value || data.Value,
-                    readDate: data.readDate || data.ReadDate
+                    readingDate: data.readingDate || data.ReadingDate
                 };
 
                 this._data[id] = pi;
                 res.send({data: pi});
-            })
+            });
+
+        this.app.route('/RestServices/api/WorkManagement/WorkOrders/:WorkOrderId/HistoricalPerformanceIndicators/:Id')
             .put((req, res) => {
-                const id = Number(req.params["PerformanceIndicatorId"]);
+                const id = Number(req.params.Id);
                 const pi = this._data[id];
         
                 if(!pi) {
@@ -62,10 +57,10 @@ export default class WorkOrderPerformanceIndicatorService implements Service
                     const update = req.body
                     if(update) {
                         const value = update.value || update.Value;
-                        const readDate = update.readDate || update.ReadDate;
+                        const readingDate = update.readingDate || update.ReadingDate;
         
                         if(value != null && !isNaN(value)) pi.value = Number(value);
-                        if(readDate != null) pi.readDate = new Date(readDate);
+                        if(readingDate != null) pi.readingDate = new Date(readingDate);
                     }
                     res.send({data: pi});
                 }
